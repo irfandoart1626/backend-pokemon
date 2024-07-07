@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
 app.use(express.json());
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -41,14 +41,14 @@ app.use(cors());
 
   
 app.post('/capture', async (req, res) => {
-    const { name, nickname } = req.body;
+    const { name, nickname, type } = req.body;
     const captured_at = new Date().toISOString(); // Mengambil waktu saat ini dalam format ISO untuk captured_at
   
     try {
-      const query = 'INSERT INTO captured_pokemon ("name", nickname, captured_at) VALUES ($1, $2, $3)';
-      await pool.query(query, [name, nickname, captured_at]);
+      const query = 'INSERT INTO captured_pokemon ("name", nickname, captured_at, type) VALUES ($1, $2, $3, $4)';
+      await pool.query(query, [name, nickname, captured_at, type]);
       res.status(200).send('Pokémon berhasil ditangkap.');
-    } catch (error) {
+    } catch (error) {s
       console.error('Gagal menyimpan Pokémon yang ditangkap:', error);
       res.status(500).send('Gagal menyimpan Pokémon yang ditangkap.');
     }
